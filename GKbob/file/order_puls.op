@@ -1,0 +1,29 @@
+@ client_a
+$ UPGRADE gql
+
+@ client_b
+$ UPGRADE gsql
+
+@ server
+$ UPGRADE server
+$ START server
+
+@ client_a
+$ CONNECT server
+gs_ktool -g
+> CREATE TABLE t(c1 INT, c2 TEXT);
+> INSERT INTO t VALUES(5, "five");
+$ TIMING 1
+> INSERT INTO t VALUES(6, "six");
+
+@ client_b
+gsql -d posgres -p 19500 -r
+> INSERT INTO t VALUE(7, "seven");
+
+@ client_a
+gs_ktool -e -f ./a -p gauss@234
+$ CP ./a TO client_c ./
+
+$ SWITCH TO client_c
+gs_ktool -i -f ./a -p gauss@234
+: s2
