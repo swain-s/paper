@@ -1,3 +1,5 @@
+import time
+
 #**************** TYPE ***************************
 # type : order plus type
 class OrderType(object):
@@ -19,29 +21,40 @@ class ExecType(object):
 #***************** Event **********************
 # struct : subject
 class Subject(object):
-    def __init__(self):
-        self.name = None
-        self.ip = None
-        self.port  = None
-        self.sock = None
+    def __init__(self, name, ip, port, sock):
+        self.name = name
+        self.ip = ip
+        self.port  = port
+        self.sock = sock
 
 # struct : order plus
 class OrderPlus(object):
-    def __init__(self):
-        self.exec_client = None
-        self.type = None # OrderType
+    def __init__(self, src_order_type, src_order):
+        self.src_order_type = src_order_type
+        self.src_order = src_order
+        self.next = None
+        self.dest_order_type = None
+        self.dest_orde_list = None
         self.exec_type = None # ExecType
-        self.order_list = None
-        self.tans_order_list = None
         self.gsql_path = None
         self.gsql_arg = None
+
+# struct : status
+class Status(object):
+    def __init__(self):
+        self.status_list = []
+        self.timestamp_list = []
+
+    def refresh(self, status):
+        self.status_list.append(status)
+        self.timestamp_list.append(time.strftime("%Y:%m:%d", time.localtime()))
 
 # struct : event
 class Event(object):
     def __init__(self):
         self.type = None
-        self.status_list = []
-        self.timestamp_list = []
+        self.status = None
         self.src_obj = None # Subject
+        self.dest_obj = None
         self.order_plus = None # OrderPlus
         self.result_list = None

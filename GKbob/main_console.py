@@ -27,34 +27,37 @@ class ConnectPool(object):
 
 class MainConsole(object):
     def __init__(self):
-        self.ip = None
-        self.port = None
-        self.listener = None
+        self.master = Subject("my name", "127.0.0.1", 5555, None)
+        self.recv_con_pool = ConnectPool()
+        self.send_con_pool = ConnectPool()
+        self.order_plus_queue = []
+        self.cur_client = None
+        self.order_parse = OrderPlus()
 
-        self.connect_pool = ConnectPool()
-
-    def start(self):
-        self.listener = socket.socket()
-        self.listener.setblocking(False)
-        self.listener.bind((self.ip, self.port))
-        self.listener.listen(5)
+    def start_listen_thread(self):
+        self.master.sock = socket.socket()
+        self.master.sock.setblocking(False)
+        self.master.sock.bind((self.master.ip, self.master.port))
+        self.master.sock.listen(5)
 
         while True:
             try:
-                (sock, ip) = self.listener.accept()
-                master = Subject()
-                master.sock = sock
-                master.sock.setblocking(False)
-                master.ip = ip
-                master.name = master.sock.recv(1024)
-                self.connect_pool.add_subject(master)
+                (sock, ip) = self.master.sock.accept()
+                src_master = Subject(None, ip, None, sock)
+                src_master.sock.setblocking(False)
+                src_master.name = src_master.sock.recv(1024)
+                self.recv_con_pool.add_subject(src_master)
             except:
                 time.sleep(2)
-            else:
                 try:
-                    for conn in self.connect_pool.pool:
-                        message = conn.sock.recv(1024)
-                        order_plus = OrderPlus()
-                        order_plus =
+                    for subject in self.recv_con_pool.pool:
+                        message = subject.sock.recv(1024)
 
 
+            else:
+
+    def parse_thread_start(self):
+        pass
+
+    def start_conn_thread(self):
+        pass
