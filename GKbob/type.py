@@ -20,12 +20,16 @@ class ExecType(object):
 
 #***************** Event **********************
 # struct : subject
+
+on = 1
+off = 0
 class Subject(object):
-    def __init__(self, name, ip, port, sock):
+    def __init__(self, name, ip, port, status):
         self.name = name
         self.ip = ip
         self.port  = port
-        self.sock = sock
+        self.status = status
+        self.sock = None
 
 # struct : order plus
 class OrderPlus(object):

@@ -1,4 +1,5 @@
-@ client_a
+@ client_b
+ls
 $ REFRESH SUBJECT
 $ UPGRADE gql
 
